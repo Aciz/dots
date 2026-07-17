@@ -1,0 +1,160 @@
+* {
+  font-family: "CaskaydiaCove Nerd Font Propo";
+  font-weight: bold;
+  font-size: 16px;
+  /* background-color: rgba(20, 27, 36, 0.8); */
+}
+
+window#waybar {
+  /* background-color: rgba(40, 42, 54, 0.8); */
+  /*border-bottom: 3px solid rgba(116, 199, 236, 0.8);*/
+  background: #1a121e;
+  background: linear-gradient(
+    180deg,
+    rgba(20, 27, 36, 1) 0%,
+    rgba(20, 27, 36, 0) 100%
+  );
+  color: #f8f8f2;
+  transition-property: background-color;
+  transition-duration: 0.5s;
+}
+
+window#waybar.hidden {
+  opacity: 0.2;
+}
+
+button {
+  /* Use box-shadow instead of border so the text isn't offset */
+  box-shadow: inset 0 -2px transparent;
+  /* Avoid rounded borders under each button name */
+  border: none;
+  border-radius: 0;
+}
+
+/* https://github.com/Alexays/Waybar/wiki/FAQ#the-workspace-buttons-have-a-strange-hover-effect */
+button:hover {
+  background: inherit;
+  /* box-shadow: inset 0 -2px #41a7fc; */
+}
+
+/* you can set a style on hover for any module like this */
+#custom-power:hover,
+#pulseaudio:hover {
+  background-color: #283347;
+}
+
+#workspaces button {
+  padding: 0 6px;
+  background-color: alpha(#1a121e, 0.5);
+  color: #93a4c3;
+}
+
+#workspaces button:hover {
+  background-color: alpha(#1a121e, 0.5);
+}
+
+#workspaces button.focused {
+  background-color: #283347;
+  box-shadow: inset 0 -2px #41a7fc;
+}
+
+/* for Hyprland */
+#workspaces button.active {
+  background-color: #283347;
+  box-shadow: inset 0 -2px #41a7fc;
+}
+
+#workspaces button.urgent {
+  background-color: #f65866;
+}
+
+#clock,
+#cpu,
+#memory,
+#pulseaudio, /* #wireplumber, */
+#tray,
+#idle_inhibitor,
+#scratchpad,
+#mode,
+#submap,
+#custom-power {
+  padding: 0 10px;
+  border-bottom: 2px solid rgba(65, 167, 252, 1);
+  background-color: alpha(#1a121e, 0.5);
+  color: #93a4c3;
+}
+
+#window,
+#workspaces {
+  /* margin: 0 4px; */
+}
+
+/* If workspaces is the leftmost module, omit left margin */
+.modules-left > widget:first-child > #workspaces {
+  margin-left: 0px;
+}
+
+/* If workspaces is the rightmost module, omit right margin */
+.modules-right > widget:last-child > #workspaces {
+  margin-right: 0px;
+}
+
+@keyframes blink {
+  to {
+    background-color: #ffffff;
+    color: #000000;
+  }
+}
+
+label:focus {
+  background-color: #000000;
+}
+
+#cpu {
+  /* background-color: #8bcd5b; */
+}
+
+#memory {
+  /* background-color: #c75ae8; */
+}
+
+/* TODO: switch to wireplumber module */
+#pulseaudio {
+  /* background-color: #efbd5d; */
+}
+
+#pulseaudio.muted {
+  background-color: #283347;
+  border-bottom: solid 2px alpha(#efbd5d, 1);
+}
+
+/* #wireplumber { */
+/*   background-color: #fff0f5; */
+/*   color: #000000; */
+/* } */
+/**/
+/* #wireplumber.muted { */
+/*   background-color: #f53c3c; */
+/* } */
+
+#tray > .passive {
+  -gtk-icon-effect: dim;
+}
+
+#tray > .needs-attention {
+  -gtk-icon-effect: highlight;
+  background-color: #eb4d4b;
+}
+
+#idle_inhibitor.activated {
+  background-color: #283347;
+  border-bottom: solid 2px alpha(#efbd5d, 1);
+}
+
+#scratchpad {
+  /* background: rgba(0, 0, 0, 0.2); */
+}
+
+#scratchpad.empty {
+  background-color: transparent;
+}

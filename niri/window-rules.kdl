@@ -1,0 +1,76 @@
+// fullscreen windows
+window-rule {
+  match app-id="^(brave-browser)$"
+  match app-id="^(firefox)$"
+  match app-id="^(vesktop)$"
+  match app-id="^(blender)$"
+  match app-id="^(com.obsproject.Studio)$" title="^(OBS).*"
+  match app-id="^(gimp)$" title="^(GNU Image Manipulation Program)$"
+  match app-id="^(jetbrains-clion)$"
+  match app-id="^(resolve)" title="^(DaVinci Resolve - ).*"
+  match app-id="^(affinity.real.exe)$" title="^(Affinity)$"
+
+  default-column-width { proportion 1.0; }
+}
+
+// fullscreen only for radiant main window
+window-rule {
+  match app-id="^(NetRadiant-Custom)$" title=r#"\.(map|reg)$"#
+
+  default-column-width { proportion 1.0; }
+}
+
+// VRR for gaming
+window-rule {
+  match app-id="^(ete).*"
+  match app-id="^(etl).*"
+  match app-id="^(steam_app_).*"
+  match app-id="^(gw.exe)$"
+
+  exclude title="^(7th Heaven).*"
+
+  open-floating true
+  variable-refresh-rate true
+}
+
+// floating windows
+window-rule {
+  match app-id="^(brave-).*(-Default)$" // bitwarden unlock window
+  match app-id="^(QtPack3r)$"
+  match app-id="^(vlc)$"
+  match app-id="^(xdg-desktop-portal-gtk)$"
+  match app-id="^(io.github.celluloid_player.Celluloid)$"
+  match app-id="^(clipse)$"
+
+  match title="^(Qalculate!)$"
+  match title="^(mGBA).*"
+
+  match app-id="^(flameshot)$" title="^(Capture Launcher)$"
+
+  match app-id="^(steam)$" // any steam sub-window
+  exclude title="^(Steam)$" // exclude main steam window
+
+  // thunar rename popup
+  match app-id="^(thunar)$" title="^(Rename).*"
+  match app-id="^(thunar)$" title="^(File Operation Progress).*"
+
+  match app-id="^(resolve)$" // any resolve sub-window
+  exclude title="^(DaVinci Resolve - ).*" // exclude main resolve window
+
+  open-floating true
+}
+
+// prevent DaVinci Resolve from opening on full screen mode
+window-rule {
+  match app-id="^(resolve)$" 
+  exclude title="^(resolve)$" // allow video popup to be fullscreen
+
+  open-fullscreen false
+}
+
+// proper size for NDS games
+window-rule {
+  match app-id="^(net.kuribo64.melonDS)$"
+
+  default-column-width { fixed 780; }
+}

@@ -1,0 +1,8 @@
+spawn-at-startup "/home/aciz/.config/waybar/niri/launch.sh"
+spawn-at-startup "swaybg" "-i" "/home/aciz/Pictures/wallpapers/wallhaven-83w9vk.jpg"
+spawn-at-startup "/home/aciz/scripts/jamesdsp.sh"
+spawn-at-startup "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1"
+spawn-at-startup "flameshot"
+spawn-at-startup "xwayland-satellite"
+spawn-at-startup "clipse" "--listen"
+spawn-at-startup "idle.sh"

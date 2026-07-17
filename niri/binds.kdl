@@ -1,0 +1,15 @@
+binds {
+    // Mod+F1 { spawn "brave"; }
+    Mod+F1 { spawn "firefox"; }
+    Mod+F2 { spawn "vesktop"; }
+    Mod+F3 { spawn "zapzap"; }
+    Mod+F4 { spawn "steam"; }
+
+    // Ctrl+J { spawn-sh "sudo ydotool click 0x00 0xC0"; }
+    // Ctrl+K { spawn-sh "sudo ydotool click 0x00 0xC0"; }
+
+    Mod+Shift+D { spawn "thunar"; }
+    Mod+Shift+O { spawn-sh "~/scripts/jamesdsp.sh"; }
+
+    Ctrl+Print { spawn "flameshot" "gui"; }
+}

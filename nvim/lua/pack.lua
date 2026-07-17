@@ -1,0 +1,254 @@
+local gh_repo = function(x)
+	return 'https://github.com/' .. x
+end
+
+vim.pack.add({
+	-- themes
+	gh_repo("AlexvZyl/nordic.nvim"),
+	gh_repo("rebelot/kanagawa.nvim"),
+	{
+		src = gh_repo("catppuccin/nvim"),
+		name = "catppuccin"
+	},
+	gh_repo("folke/tokyonight.nvim"),
+
+	-- lualine
+	gh_repo("nvim-lualine/lualine.nvim"),
+
+	-- telescope
+	gh_repo("nvim-telescope/telescope.nvim"),
+	-- telescope dependencies
+	gh_repo("nvim-lua/plenary.nvim"),
+	gh_repo("nvim-telescope/telescope-fzf-native.nvim"),
+	gh_repo("nvim-telescope/telescope-ui-select.nvim"),
+	gh_repo("nvim-tree/nvim-web-devicons"),
+
+	-- mini
+	gh_repo("nvim-mini/mini.nvim"),
+
+	-- treesitter
+	{
+		src = gh_repo("nvim-treesitter/nvim-treesitter"),
+		branch = "main",
+	},
+	gh_repo("nvim-treesitter/nvim-treesitter-context"),
+
+	-- lsp
+	gh_repo("neovim/nvim-lspconfig"),
+	gh_repo("mason-org/mason.nvim"),
+	gh_repo("WhoIsSethDaniel/mason-tool-installer.nvim"),
+	gh_repo("mason-org/mason-lspconfig.nvim"),
+
+	-- dap
+	gh_repo("mfussenegger/nvim-dap"),
+	gh_repo("jay-babu/mason-nvim-dap.nvim"), -- soft-dependency of nvim-dap
+	gh_repo("rcarriga/nvim-dap-ui"),
+	gh_repo("nvim-neotest/nvim-nio"),       -- nvim-dap-ui dependency
+
+	-- neogit
+	gh_repo("NeogitOrg/neogit"),
+	gh_repo("sindrets/diffview.nvim"), -- neogit dependency
+
+	-- gitsigns
+	gh_repo("lewis6991/gitsigns.nvim"),
+
+	-- misc
+	gh_repo("folke/todo-comments.nvim"),
+	gh_repo("folke/which-key.nvim"),
+	gh_repo("iamcco/markdown-preview.nvim")
+})
+
+--------------------------------------------------------------------------------
+-- themes
+--------------------------------------------------------------------------------
+require("themes.nordic-config")
+require("themes.kanagawa-config")
+require("themes.catppuccin-config")
+require("themes.tokyonight-config")
+
+-- set colorscheme
+vim.cmd("colorscheme catppuccin")
+
+
+--------------------------------------------------------------------------------
+-- lualine
+--------------------------------------------------------------------------------
+require("lualine-config")
+
+
+--------------------------------------------------------------------------------
+-- telescope
+--------------------------------------------------------------------------------
+require("telescope-config")
+
+
+--------------------------------------------------------------------------------
+-- mini.files
+--------------------------------------------------------------------------------
+local MiniFiles = require("mini.files")
+MiniFiles.setup({})
+
+-- keymaps
+vim.keymap.set("n", "-", function() MiniFiles.open() end, { desc = "Toggle Mini File explorer" })
+vim.keymap.set("n", "<leader>-", function()
+	MiniFiles.open(vim.api.nvim_buf_get_name(0), false)
+	MiniFiles.reveal_cwd()
+end, { desc = "Toggle Mini Files in current working directory" })
+
+
+--------------------------------------------------------------------------------
+-- mini.notify
+--------------------------------------------------------------------------------
+require("mini.notify").setup({
+	-- only show messages
+	content = {
+		format = function(notif)
+			return notif.msg
+		end,
+	},
+
+	window = {
+		winblend = 25,
+	},
+})
+
+
+--------------------------------------------------------------------------------
+-- mini.completions
+--------------------------------------------------------------------------------
+--[[
+local MiniCompletion = require("mini.completion")
+MiniCompletion.setup({
+	delay = {
+		completion = 0,
+		info = 0,
+		signature = 0,
+	},
+
+	window = {
+		info = {
+			border = "rounded"
+		},
+		signature = {
+			border = "rounded"
+		},
+	},
+
+	lsp_completion = {
+		auto_setup = true,
+	}
+})
+]] --
+
+
+--------------------------------------------------------------------------------
+-- mini.ai
+--------------------------------------------------------------------------------
+require("mini.ai").setup({
+	n_lines = 500
+})
+
+
+--------------------------------------------------------------------------------
+-- mini.parirs
+--------------------------------------------------------------------------------
+require("mini.pairs").setup({})
+
+
+--------------------------------------------------------------------------------
+-- mini.surround
+--------------------------------------------------------------------------------
+require("mini.surround").setup({})
+
+
+--------------------------------------------------------------------------------
+-- treesitter
+--------------------------------------------------------------------------------
+require("treesitter-config")
+
+
+--------------------------------------------------------------------------------
+-- treesitter-context
+--------------------------------------------------------------------------------
+require("treesitter-context").setup({
+	max_lines = 10,
+})
+
+
+--------------------------------------------------------------------------------
+-- lsp
+--------------------------------------------------------------------------------
+require("mason").setup()
+require("lsp-config")
+
+
+--------------------------------------------------------------------------------
+-- dap
+--------------------------------------------------------------------------------
+require("dap-config")
+
+-- NOTE: this must be after 'mason.setup()'!
+require("mason-nvim-dap").setup({
+	automatic_installation = true,
+	ensure_installed = {},
+})
+
+
+--------------------------------------------------------------------------------
+-- neogit
+--------------------------------------------------------------------------------
+local Neogit = require("neogit")
+Neogit.setup({
+	graph_style = "unicode",
+	process_spinner = true,
+})
+
+-- keymaps
+vim.keymap.set("n", "<leader>gs", function() Neogit.open() end, { desc = "Neo[G]it [s]tatus" })
+vim.keymap.set("n", "<leader>gp", function() Neogit.open({ "pull" }) end, { desc = "Neo[G]it [p]ull" })
+vim.keymap.set("n", "<leader>gP", function() Neogit.open({ "push" }) end, { desc = "Neo[G]it [P]ush" })
+vim.keymap.set("n", "<leader>gc", function() Neogit.open({ "commit" }) end, { desc = "Neo[G]it [c]ommit" })
+vim.keymap.set("n", "<leader>gb", function() Neogit.open({ "branch" }) end, { desc = "Neo[G]it [b]ranch" })
+vim.keymap.set("n", "<leader>gr", function() Neogit.open({ "rebase" }) end, { desc = "Neo[G]it [r]ebase" })
+
+require("diffview").setup({
+	keymaps = {
+		view = {
+			{ "n", "q", ":DiffviewClose<CR>", { desc = "Close diffview" } },
+		},
+		file_panel = {
+			{ "n", "q", ":DiffviewClose<CR>", { desc = "Close diffview" } },
+		},
+	}
+})
+
+--------------------------------------------------------------------------------
+-- gitsigns
+--------------------------------------------------------------------------------
+require("gitsigns-config")
+
+
+--------------------------------------------------------------------------------
+-- todo-comments
+--------------------------------------------------------------------------------
+require("todo-comments").setup({
+	sings = false,
+})
+
+
+--------------------------------------------------------------------------------
+-- which-key
+--------------------------------------------------------------------------------
+require("which-key-config")
+
+
+--------------------------------------------------------------------------------
+-- markdown-preview
+--------------------------------------------------------------------------------
+-- require("markdown-preview").setup({
+-- 	vim.fn["mkdp#util#install"]()
+-- })
+--
+-- vim.g.mkdp_filetypes = { "markdown" }
+-- vim.g.mkdp_auto_close = 0
+-- vim.g.mkdp_combine_preview = 1
