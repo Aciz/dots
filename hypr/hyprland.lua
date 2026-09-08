@@ -41,12 +41,19 @@ hl.monitor({
 	max_avg_luminance = 200,
 })
 
+hl.monitor({
+	output="DP-2",
+	mode="1920x1080@144",
+	position="-1920x0",
+	-- icc="/home/aciz/Documents/icc/ASUS-VG248QE-Nvidia.icm",
+})
+
 hl.config({
 	render = {
 		direct_scanout = 2,
 		non_shader_cm = 2,
-		cm_auto_hdr = 0,
-		-- use_fp16 = 0,
+		cm_auto_hdr = 1,
+		-- use_fp16 = 2,
 	},
 })
 
@@ -56,7 +63,7 @@ hl.config({
 
 -- Set programs that you use
 local terminal = "kitty"
-local fileManager = "thunar"
+local fileManager = "dolphin"
 local menu = "fuzzel"
 
 -----------------------
@@ -114,16 +121,16 @@ hl.config({
 
 		shadow = {
 			enabled = true,
-			range = 4,
-			render_power = 3,
-			color = 0xee1a1a1a,
+			range = 16,
+			render_power = 2,
+			color = "rgba(000000ff)",
 		},
 
 		blur = {
 			enabled = true,
 			size = 8,
 			passes = 1,
-			vibrancy = 0.1696,
+			brightness = 0.5,
 		},
 	},
 
@@ -140,12 +147,13 @@ hl.curve("almostLinear", { type = "bezier", points = { { 0.5, 0.5 }, { 0.75, 1 }
 hl.curve("quick", { type = "bezier", points = { { 0.15, 0 }, { 0.1, 1 } } })
 
 -- Default springs
-hl.curve("easy", { type = "spring", mass = 1, stiffness = 71.2633, dampening = 15.8273644 })
+hl.curve("easy", { type = "spring", mass = 1, stiffness = 238.1191, dampening = 24.21279333 })
+hl.curve("fastSpring", { type = "spring", mass = 1, stiffness = 700, dampening = 45 })
 
 hl.animation({ leaf = "global", enabled = true, speed = 10, bezier = "default" })
 hl.animation({ leaf = "border", enabled = true, speed = 5.39, bezier = "easeOutQuint" })
-hl.animation({ leaf = "windows", enabled = true, speed = 4.79, spring = "easy" })
-hl.animation({ leaf = "windowsIn", enabled = true, speed = 4.1, spring = "easy", style = "popin 87%" })
+hl.animation({ leaf = "windows", enabled = true, speed = 4.79, spring = "fastSpring" })
+hl.animation({ leaf = "windowsIn", enabled = true, speed = 4.1, spring = "fastSpring", style = "popin 87%" })
 hl.animation({ leaf = "windowsOut", enabled = true, speed = 1.49, bezier = "linear", style = "popin 87%" })
 hl.animation({ leaf = "fadeIn", enabled = true, speed = 1.73, bezier = "almostLinear" })
 hl.animation({ leaf = "fadeOut", enabled = true, speed = 1.46, bezier = "almostLinear" })
@@ -155,9 +163,9 @@ hl.animation({ leaf = "layersIn", enabled = true, speed = 4, bezier = "easeOutQu
 hl.animation({ leaf = "layersOut", enabled = true, speed = 1.5, bezier = "linear", style = "fade" })
 hl.animation({ leaf = "fadeLayersIn", enabled = true, speed = 1.79, bezier = "almostLinear" })
 hl.animation({ leaf = "fadeLayersOut", enabled = true, speed = 1.39, bezier = "almostLinear" })
-hl.animation({ leaf = "workspaces", enabled = true, speed = 3.0, bezier = "easeOutQuint", style = "slidefadevert" })
-hl.animation({ leaf = "workspacesIn", enabled = true, speed = 3.0, bezier = "easeOutQuint", style = "slidefadevert" })
-hl.animation({ leaf = "workspacesOut", enabled = true, speed = 3.0, bezier = "easeOutQuint", style = "slidefadevert" })
+hl.animation({ leaf = "workspaces", enabled = true, speed = 3.0, spring = "fastSpring", style = "slidefadevert" })
+hl.animation({ leaf = "workspacesIn", enabled = true, speed = 3.0, spring = "fastSpring", style = "slidefadevert" })
+hl.animation({ leaf = "workspacesOut", enabled = true, speed = 3.0, spring = "fastSpring", style = "slidefadevert" })
 hl.animation({ leaf = "zoomFactor", enabled = true, speed = 7, bezier = "quick" })
 
 -- Ref https://wiki.hypr.land/Configuring/Basics/Workspace-Rules/
@@ -226,7 +234,7 @@ hl.config({
 		follow_mouse = 2,
 		float_switch_override_focus = 0,
 
-		sensitivity = -0.25, -- -1.0 - 1.0, 0 means no modification.
+		sensitivity = -0.15, -- -1.0 - 1.0, 0 means no modification.
 		accel_profile = "flat",
 
 		touchpad = {
@@ -261,16 +269,23 @@ hl.bind(mainMod .. " + D", hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 -- hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit")) -- dwindle only
 
--- Move focus with mainMod + arrow keys
-hl.bind(mainMod .. " + left", hl.dsp.focus({ direction = "left" }))
-hl.bind(mainMod .. " + right", hl.dsp.focus({ direction = "right" }))
-hl.bind(mainMod .. " + up", hl.dsp.focus({ direction = "up" }))
-hl.bind(mainMod .. " + down", hl.dsp.focus({ direction = "down" }))
+-- Switch focused monitor
+hl.bind(mainMod .. " + CTRL + left", hl.dsp.focus({monitor = "left"}))
+hl.bind(mainMod .. " + CTRL + right", hl.dsp.focus({monitor = "right"}))
 
-hl.bind(mainMod .. " + H", hl.dsp.focus({ direction = "left" }))
-hl.bind(mainMod .. " + L", hl.dsp.focus({ direction = "right" }))
-hl.bind(mainMod .. " + K", hl.dsp.focus({ direction = "up" }))
-hl.bind(mainMod .. " + J", hl.dsp.focus({ direction = "down" }))
+hl.bind(mainMod .. " + CTRL + h", hl.dsp.focus({monitor = "left"}))
+hl.bind(mainMod .. " + CTRL + l", hl.dsp.focus({monitor = "right"}))
+
+-- Move focus with mainMod + arrow keys
+hl.bind(mainMod .. " + left", hl.dsp.layout("focus l"))
+hl.bind(mainMod .. " + right", hl.dsp.layout("focus r"))
+hl.bind(mainMod .. " + up", hl.dsp.layout("focus u"))
+hl.bind(mainMod .. " + down", hl.dsp.layout("focus d"))
+
+hl.bind(mainMod .. " + H", hl.dsp.layout("focus l"))
+hl.bind(mainMod .. " + L", hl.dsp.layout("focus r"))
+hl.bind(mainMod .. " + K", hl.dsp.layout("focus u"))
+hl.bind(mainMod .. " + J", hl.dsp.layout("focus d"))
 
 -- Move windows with mainMod + arrow keys
 hl.bind(mainMod .. " + SHIFT + left", hl.dsp.layout("swapcol l"))
@@ -315,8 +330,8 @@ hl.bind(mainMod .. " + S", hl.dsp.workspace.toggle_special("minimized"))
 hl.bind(mainMod .. " + SHIFT + S", hl.dsp.window.move({ workspace = "special:minimized", follow = false }))
 
 -- Scroll through existing workspaces with mainMod + scroll
-hl.bind(mainMod .. " + mouse_up", hl.dsp.focus({ workspace = "e+1" }))
-hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e-1" }))
+hl.bind(mainMod .. " + mouse_up", hl.dsp.focus({ workspace = "e-1" }))
+hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
 
 -- Move/resize windows with mainMod + LMB/RMB and dragging
 hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(), { mouse = true })
@@ -401,3 +416,6 @@ hl.window_rule({
 	move = "20 monitor_h-120",
 	float = true,
 })
+
+-- DMS Include Configs
+require("dms.cursor")

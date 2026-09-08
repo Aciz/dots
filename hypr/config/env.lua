@@ -1,12 +1,16 @@
+hl.env("__GLX_VENDOR_LIBRARY_NAME", "nvidia")
 hl.env("XCURSOR_SIZE", "24")
 hl.env("HYPRCURSOR_SIZE", "24")
-hl.env("QT_QPA_PLATFORMTHEME", "gtk2")
+hl.env("QT_QPA_PLATFORMTHEME", "qt6ct")
 hl.env("GTK_USE_PORTAL", "1")
 hl.env("HYPRSHOT_DIR", "/home/aciz/Pictures/hyprshot")
-hl.env("FREETYPE_PROPERTIES", "cff:no-stem-darkening=0 autofitter:no-stem-darkening=0 truetype:interpreter-version=40")
+-- hl.env("FREETYPE_PROPERTIES", "cff:no-stem-darkening=0 autofitter:no-stem-darkening=0 truetype:interpreter-version=40")
 hl.env("ELECTRON_OZONE_PLATFORM_HINT", "auto")
 hl.env("EDITOR", "nvim")
 hl.env("TERMINAL", "kitty")
+
+-- fix for Dolphin 'Open with...' menu being empty
+hl.env("XDG_MENU_PREFIX", "arch-")
 
 -- Firefox VA-API  stuff
 hl.env("MOZ_DISABLE_RDD_SANDBOX", "1")

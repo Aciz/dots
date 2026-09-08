@@ -40,7 +40,7 @@ hl.window_rule({
 hl.window_rule({
 	name = "Floating windows (class)",
 	match = {
-		class = "^(QtPack3r|hyprland-share-picker|io.github.celluloid_player.Celluloid|io.github.Qalculate.qalculate-qt|melonDS|vlc|xdg-desktop-portal-gtk)$",
+		class = "^(QtPack3r|hyprland-share-picker|io.github.celluloid_player.Celluloid|io.github.Qalculate.qalculate-qt|melonDS|vlc|xdg-desktop-portal-gtk|org.kde.kcalc|org.kde.keditfiletype)$",
 	},
 
 	float = true,
@@ -78,7 +78,7 @@ hl.window_rule({
 hl.window_rule({
 	name = "Content: game",
 	match = {
-		class = "^(gamescope|steam_app_|ete|etl|nierautomata).*",
+		class = "^(gamescope|steam_app_|ete|ETe|etl|nierautomata).*",
 	},
 
 	content = "game",
@@ -125,7 +125,7 @@ hl.window_rule({
 hl.window_rule({
 	name = "Full width windows",
 	match = {
-		class = "^(NetRadiant-Custom|com.obsproject.Studio|gimp|jetbrains-clion)$",
+		class = "^(NetRadiant-Custom|com.obsproject.Studio|gimp|jetbrains-clion|resolve|blender)$",
 	},
 
 	scrolling_width = 1.0,
@@ -158,4 +158,47 @@ hl.window_rule({
 	},
 
 	float = false,
+})
+
+hl.window_rule({
+	name = "Blender preferences",
+	match = {
+		class = "^(blender)$",
+		title = "^(Preferences)$",
+	},
+
+	float = true,
+	size = { "(monitor_w * 0.667)", "(monitor_h * 0.667)" },
+	center = true,
+})
+
+hl.window_rule({
+	name = "Blender floating windows size",
+	match = {
+		class = "^(blender)$",
+		float = true,
+	},
+
+	size = { "(monitor_w * 0.667)", "(monitor_h * 0.667)" },
+	center = true,
+})
+
+hl.window_rule({
+	name = "Ark overwrite dialog",
+	match = {
+		class = "^(org.kde.ark)$",
+		title = "^(File Already Exists).*",
+	},
+
+	float = true,
+	center = true,
+})
+
+hl.window_rule({
+	name = "Disable Auto HDR",
+	match = {
+		class = "^(oDFe.vk|mpv).*",
+	},
+
+	no_auto_hdr = true,
 })

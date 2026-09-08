@@ -38,6 +38,9 @@ vim.keymap.set("n", "N", "Nzzzv", { desc = "Previous search result, keep cursor 
 vim.keymap.set("n", "<leader>Fr", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
 	{ desc = "Replace word under the cursor in the current buffer" })
 
+-- quickfix list
+vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
+
 -- chmod +x for the current file
 vim.keymap.set("n", "<leader>X", "<cmd>!chmod +x %<CR>", { desc = "Make current file executable", silent = true })
 

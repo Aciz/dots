@@ -1,5 +1,5 @@
 local gh_repo = function(x)
-	return 'https://github.com/' .. x
+	return "https://github.com/" .. x
 end
 
 vim.pack.add({
@@ -8,7 +8,7 @@ vim.pack.add({
 	gh_repo("rebelot/kanagawa.nvim"),
 	{
 		src = gh_repo("catppuccin/nvim"),
-		name = "catppuccin"
+		name = "catppuccin",
 	},
 	gh_repo("folke/tokyonight.nvim"),
 
@@ -38,12 +38,19 @@ vim.pack.add({
 	gh_repo("mason-org/mason.nvim"),
 	gh_repo("WhoIsSethDaniel/mason-tool-installer.nvim"),
 	gh_repo("mason-org/mason-lspconfig.nvim"),
+	gh_repo("b0o/SchemaStore.nvim"), -- for JSON schema support via jsonls
 
 	-- dap
 	gh_repo("mfussenegger/nvim-dap"),
 	gh_repo("jay-babu/mason-nvim-dap.nvim"), -- soft-dependency of nvim-dap
 	gh_repo("rcarriga/nvim-dap-ui"),
-	gh_repo("nvim-neotest/nvim-nio"),       -- nvim-dap-ui dependency
+	gh_repo("nvim-neotest/nvim-nio"), -- nvim-dap-ui dependency
+
+	-- conform
+	gh_repo("stevearc/conform.nvim"),
+
+	-- inline diagnostics
+	gh_repo("rachartier/tiny-inline-diagnostic.nvim"),
 
 	-- neogit
 	gh_repo("NeogitOrg/neogit"),
@@ -52,10 +59,14 @@ vim.pack.add({
 	-- gitsigns
 	gh_repo("lewis6991/gitsigns.nvim"),
 
+	-- opencode
+	gh_repo("nickjvandyke/opencode.nvim"),
+
 	-- misc
 	gh_repo("folke/todo-comments.nvim"),
 	gh_repo("folke/which-key.nvim"),
-	gh_repo("iamcco/markdown-preview.nvim")
+	gh_repo("iamcco/markdown-preview.nvim"),
+	gh_repo("catgoose/nvim-colorizer.lua"),
 })
 
 --------------------------------------------------------------------------------
@@ -67,20 +78,17 @@ require("themes.catppuccin-config")
 require("themes.tokyonight-config")
 
 -- set colorscheme
-vim.cmd("colorscheme catppuccin")
-
+vim.cmd("colorscheme kanagawa")
 
 --------------------------------------------------------------------------------
 -- lualine
 --------------------------------------------------------------------------------
 require("lualine-config")
 
-
 --------------------------------------------------------------------------------
 -- telescope
 --------------------------------------------------------------------------------
 require("telescope-config")
-
 
 --------------------------------------------------------------------------------
 -- mini.files
@@ -89,12 +97,13 @@ local MiniFiles = require("mini.files")
 MiniFiles.setup({})
 
 -- keymaps
-vim.keymap.set("n", "-", function() MiniFiles.open() end, { desc = "Toggle Mini File explorer" })
+vim.keymap.set("n", "-", function()
+	MiniFiles.open()
+end, { desc = "Toggle Mini File explorer" })
 vim.keymap.set("n", "<leader>-", function()
 	MiniFiles.open(vim.api.nvim_buf_get_name(0), false)
 	MiniFiles.reveal_cwd()
 end, { desc = "Toggle Mini Files in current working directory" })
-
 
 --------------------------------------------------------------------------------
 -- mini.notify
@@ -111,7 +120,6 @@ require("mini.notify").setup({
 		winblend = 25,
 	},
 })
-
 
 --------------------------------------------------------------------------------
 -- mini.completions
@@ -138,34 +146,30 @@ MiniCompletion.setup({
 		auto_setup = true,
 	}
 })
-]] --
-
+]]
+--
 
 --------------------------------------------------------------------------------
 -- mini.ai
 --------------------------------------------------------------------------------
 require("mini.ai").setup({
-	n_lines = 500
+	n_lines = 500,
 })
-
 
 --------------------------------------------------------------------------------
 -- mini.parirs
 --------------------------------------------------------------------------------
 require("mini.pairs").setup({})
 
-
 --------------------------------------------------------------------------------
 -- mini.surround
 --------------------------------------------------------------------------------
 require("mini.surround").setup({})
 
-
 --------------------------------------------------------------------------------
 -- treesitter
 --------------------------------------------------------------------------------
 require("treesitter-config")
-
 
 --------------------------------------------------------------------------------
 -- treesitter-context
@@ -174,13 +178,11 @@ require("treesitter-context").setup({
 	max_lines = 10,
 })
 
-
 --------------------------------------------------------------------------------
 -- lsp
 --------------------------------------------------------------------------------
 require("mason").setup()
 require("lsp-config")
-
 
 --------------------------------------------------------------------------------
 -- dap
@@ -193,6 +195,17 @@ require("mason-nvim-dap").setup({
 	ensure_installed = {},
 })
 
+--------------------------------------------------------------------------------
+-- conform
+--------------------------------------------------------------------------------
+require("conform-config")
+
+--------------------------------------------------------------------------------
+-- tiny-inline-diagnostic
+--------------------------------------------------------------------------------
+require("tiny-inline-diagnostic").setup({
+	preset = "simple",
+})
 
 --------------------------------------------------------------------------------
 -- neogit
@@ -204,12 +217,24 @@ Neogit.setup({
 })
 
 -- keymaps
-vim.keymap.set("n", "<leader>gs", function() Neogit.open() end, { desc = "Neo[G]it [s]tatus" })
-vim.keymap.set("n", "<leader>gp", function() Neogit.open({ "pull" }) end, { desc = "Neo[G]it [p]ull" })
-vim.keymap.set("n", "<leader>gP", function() Neogit.open({ "push" }) end, { desc = "Neo[G]it [P]ush" })
-vim.keymap.set("n", "<leader>gc", function() Neogit.open({ "commit" }) end, { desc = "Neo[G]it [c]ommit" })
-vim.keymap.set("n", "<leader>gb", function() Neogit.open({ "branch" }) end, { desc = "Neo[G]it [b]ranch" })
-vim.keymap.set("n", "<leader>gr", function() Neogit.open({ "rebase" }) end, { desc = "Neo[G]it [r]ebase" })
+vim.keymap.set("n", "<leader>gs", function()
+	Neogit.open()
+end, { desc = "Neo[G]it [s]tatus" })
+vim.keymap.set("n", "<leader>gp", function()
+	Neogit.open({ "pull" })
+end, { desc = "Neo[G]it [p]ull" })
+vim.keymap.set("n", "<leader>gP", function()
+	Neogit.open({ "push" })
+end, { desc = "Neo[G]it [P]ush" })
+vim.keymap.set("n", "<leader>gc", function()
+	Neogit.open({ "commit" })
+end, { desc = "Neo[G]it [c]ommit" })
+vim.keymap.set("n", "<leader>gb", function()
+	Neogit.open({ "branch" })
+end, { desc = "Neo[G]it [b]ranch" })
+vim.keymap.set("n", "<leader>gr", function()
+	Neogit.open({ "rebase" })
+end, { desc = "Neo[G]it [r]ebase" })
 
 require("diffview").setup({
 	keymaps = {
@@ -219,14 +244,13 @@ require("diffview").setup({
 		file_panel = {
 			{ "n", "q", ":DiffviewClose<CR>", { desc = "Close diffview" } },
 		},
-	}
+	},
 })
 
 --------------------------------------------------------------------------------
 -- gitsigns
 --------------------------------------------------------------------------------
 require("gitsigns-config")
-
 
 --------------------------------------------------------------------------------
 -- todo-comments
@@ -235,20 +259,50 @@ require("todo-comments").setup({
 	sings = false,
 })
 
-
 --------------------------------------------------------------------------------
 -- which-key
 --------------------------------------------------------------------------------
 require("which-key-config")
 
-
 --------------------------------------------------------------------------------
 -- markdown-preview
+-- NOTE: this is a vimscript plugin
 --------------------------------------------------------------------------------
--- require("markdown-preview").setup({
--- 	vim.fn["mkdp#util#install"]()
--- })
---
--- vim.g.mkdp_filetypes = { "markdown" }
--- vim.g.mkdp_auto_close = 0
--- vim.g.mkdp_combine_preview = 1
+vim.g.mkdp_filetypes = { "markdown" }
+vim.g.mkdp_auto_close = 0
+vim.g.mkdp_combine_preview = 1
+
+--------------------------------------------------------------------------------
+-- opencode
+--------------------------------------------------------------------------------
+
+vim.keymap.set({ "n", "x" }, "<leader>oa", function()
+	require("opencode").ask("@this: ")
+end, { desc = "[o]penCode: [a]sk" })
+vim.keymap.set({ "n", "x" }, "<leader>os", function()
+	require("opencode").select()
+end, { desc = "[o]penCode: [s]elect..." })
+vim.keymap.set({ "n", "x" }, "<leader>or", function()
+	return require("opencode").operator("@this ")
+end, { desc = "[o]penCode: [r]ange [a]ppend", expr = true })
+vim.keymap.set({ "n" }, "<leader>ol", function()
+	return require("opencode").operator("@this ") .. "_"
+end, { desc = "[o]penCode: [l]ine [a]ppend", expr = true })
+-- vim.keymap.set({ "n" }, "<S-C-u>", function() require("opencode").command("session.half.page.up") end, { desc = "Scroll OpenCode up" })
+-- vim.keymap.set({ "n" }, "<S-C-d>", function() require("opencode").command("session.half.page.down") end, { desc = "Scroll OpenCode down" })
+
+--------------------------------------------------------------------------------
+-- colorizer
+--------------------------------------------------------------------------------
+require("colorizer").setup({
+	options = {
+		parsers = {
+			oklch = {
+				enable = true,
+			},
+			tailwind = {
+				enable = true,
+			},
+		},
+	},
+})

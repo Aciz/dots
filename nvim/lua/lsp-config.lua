@@ -1,6 +1,5 @@
 -- keymaps
-vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { desc = "Go to definition" })
-vim.keymap.set("n", "<leader>f", vim.lsp.buf.format, { desc = "Format local buffer" })
+vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
 
 vim.lsp.inlay_hint.enable(true)
 
@@ -33,8 +32,8 @@ vim.diagnostic.config({
 })
 
 -- autocompletions, straight from nvim docs
-vim.api.nvim_create_autocmd('LspAttach', {
-	group = vim.api.nvim_create_augroup('my.lsp', {}),
+vim.api.nvim_create_autocmd("LspAttach", {
+	group = vim.api.nvim_create_augroup("my.lsp", {}),
 	callback = function(ev)
 		local map = function(keys, func, desc, mode)
 			mode = mode or "n"
@@ -47,7 +46,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		-- end
 
 		-- Enable auto-completion. Note: Use CTRL-Y to select an item. |complete_CTRL-Y|
-		if client:supports_method('textDocument/completion') then
+		if client:supports_method("textDocument/completion") then
 			-- Optional: trigger autocompletion on EVERY keypress. May be slow!
 			-- local chars = {}; for i = 32, 126 do table.insert(chars, string.char(i)) end
 			-- client.server_capabilities.completionProvider.triggerCharacters = chars
@@ -74,14 +73,11 @@ vim.api.nvim_create_autocmd('LspAttach', {
 			end, "[T]oggle Inlay [H]ints")
 		end
 
-
 		-- enable code action on current line, regardless of the cursor position
-		map("gra",
-			function()
-				local curr_row = vim.api.nvim_win_get_cursor(0)[1]
-				vim.lsp.buf.code_action { ["range"] = { ["start"] = { curr_row, 0 }, ["end"] = { curr_row, 200 } } }
-			end,
-			"[G]oto Code [A]ction", { "n", "x" })
+		map("gra", function()
+			local curr_row = vim.api.nvim_win_get_cursor(0)[1]
+			vim.lsp.buf.code_action({ ["range"] = { ["start"] = { curr_row, 0 }, ["end"] = { curr_row, 200 } } })
+		end, "[G]oto Code [A]ction", { "n", "x" })
 	end,
 })
 
@@ -95,23 +91,23 @@ local servers = {
 			if client.workspace_folders then
 				local path = client.workspace_folders[1].name
 				if
-						path ~= vim.fn.stdpath('config')
-						and (vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc'))
+					path ~= vim.fn.stdpath("config")
+					and (vim.uv.fs_stat(path .. "/.luarc.json") or vim.uv.fs_stat(path .. "/.luarc.jsonc"))
 				then
 					return
 				end
 			end
 
-			client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
+			client.config.settings.Lua = vim.tbl_deep_extend("force", client.config.settings.Lua, {
 				runtime = {
 					-- Tell the language server which version of Lua you're using (most
 					-- likely LuaJIT in the case of Neovim)
-					version = 'LuaJIT',
+					version = "LuaJIT",
 					-- Tell the language server how to find Lua modules same way as Neovim
 					-- (see `:h lua-module-load`)
 					path = {
-						'lua/?.lua',
-						'lua/?/init.lua',
+						"lua/?.lua",
+						"lua/?/init.lua",
 					},
 				},
 				-- Make the server aware of Neovim runtime files
@@ -159,20 +155,87 @@ local servers = {
 		},
 	},
 
+	------------------------------------------------------------------------------
+	-- cmake
+	------------------------------------------------------------------------------
 	-- FIXME: python dependency issue, can't install:
 	-- Failed to find a python3 installation in PATH that meets the required versions (<3.14,>=3.8.0). Found version: 3.14.6.
 	-- cmake = {},
+
+	------------------------------------------------------------------------------
+	-- bash
+	------------------------------------------------------------------------------
+	bashls = {
+		cmd = { "bash-language-server", "start" },
+		settings = {
+			bashIde = {
+				-- Glob pattern for finding and parsing shell script files in the workspace.
+				-- Used by the background analysis features across files.
+
+				-- Prevent recursive scanning which will cause issues when opening a file
+				-- directly in the home directory (e.g. ~/foo.sh).
+				--
+				-- Default upstream pattern is "**/*@(.sh|.inc|.bash|.command)".
+				globPattern = vim.env.GLOB_PATTERN or "*@(.sh|.inc|.bash|.command)",
+			},
+		},
+		filetypes = { "bash", "sh" },
+		root_markers = { ".git" },
+	},
+	-- TODO: figure this out
+	-- shellcheck = {
+	-- 	cmd = { "shellcheck" },
+	-- },
+
+	------------------------------------------------------------------------------
+	-- typescript
+	------------------------------------------------------------------------------
+	vtsls = {},
+	eslint = {},
+
+	------------------------------------------------------------------------------
+	-- json
+	------------------------------------------------------------------------------
+	jsonls = {
+		settings = {
+			json = {
+				schemas = require("schemastore").json.schemas(),
+				validate = { enable = true },
+			},
+		},
+	},
+
+	------------------------------------------------------------------------------
+	-- toml
+	------------------------------------------------------------------------------
+	taplo = {},
+
+	------------------------------------------------------------------------------
+	-- markdown
+	------------------------------------------------------------------------------
+	marksman = {},
+
+	------------------------------------------------------------------------------
+	-- python
+	------------------------------------------------------------------------------
+	pyright = {},
+	ruff = {},
 }
 
+local ensure_installed = vim.tbl_keys(servers)
 
-local ensure_installed = vim.tbl_keys(servers or {})
-vim.list_extend(ensure_installed, {
-	-- You can add other tools here that you want Mason to install
+require("mason-lspconfig").setup({
+	ensure_installed = ensure_installed,
 })
 
-require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
+require("mason-tool-installer").setup({
+	ensure_installed = {
+		"stylua",
+		"prettierd",
+		"shfmt",
+	},
+})
 
 for name, server in pairs(servers) do
 	vim.lsp.config(name, server)
-	vim.lsp.enable(name)
 end

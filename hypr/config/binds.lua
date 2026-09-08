@@ -17,3 +17,5 @@ hl.bind(
 	"SHIFT + Print",
 	hl.dsp.exec_cmd("swappyfile=$(hyprshot -m window -z -- echo); swappy -f $swappyfile -o $swappyfile")
 )
+
+hl.bind(mainMod .. " + SHIFT + P", hl.dsp.exec_cmd("~/scripts/random-wallpaper.sh fetch"))
