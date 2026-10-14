@@ -2,7 +2,7 @@ local treesitter = require("nvim-treesitter")
 
 local ensure_installed = {
 	-- languages
-	"cpp", "json", "toml", "xml", "yaml", "html", "css", "bash",
+	"cpp", "json", "toml", "xml", "yaml", "html", "css", "bash", "rust",
 	-- extras
 	"http",
 }

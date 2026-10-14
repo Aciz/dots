@@ -40,7 +40,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	end,
 })
 
-
 --------------------------------------------------------------------------------
 -- buffers
 --------------------------------------------------------------------------------
@@ -65,13 +64,16 @@ vim.opt.scrolloff = 10
 -- preview substitutions live
 vim.opt.inccommand = "split"
 
-
 --------------------------------------------------------------------------------
 -- general behavior
 --------------------------------------------------------------------------------
 
 -- confirm on failed actions
 vim.o.confirm = true
+
+-- load per-project config from '.nvim.lua'/'.exrc' in the cwd; nvim prompts to
+-- ':trust' the file, and the trust is keyed to the file's contents
+vim.o.exrc = true
 
 -- case sensitivity options
 vim.opt.ignorecase = true
@@ -99,12 +101,17 @@ end)
 vim.opt.isfname:append("@-@")
 
 -- autocompletion
-vim.o.autocomplete = true
-vim.opt.completeopt = "menuone,noselect,fuzzy,nosort"
-vim.opt.complete:append("o")
-vim.o.pumheight = 15
-vim.o.pummaxwidth = 120
-vim.o.pumborder = "rounded"
+-- NOTE: completion is owned by blink.cmp (see 'blink-cmp-config.lua'). These are
+-- the *built-in* completion's switches: on nvim 0.12 'autocomplete' defaults to
+-- false and 'completeopt' to "menu,popup". Left enabled, they run a second
+-- engine alongside blink. Commented out 2026-10-07 rather than removed - re-enable
+-- if blink is ever dropped.
+-- vim.o.autocomplete = true
+-- vim.opt.completeopt = "menuone,noselect,fuzzy"
+-- vim.opt.complete:prepend("o")
+-- vim.o.pumheight = 15
+-- vim.o.pummaxwidth = 120
+-- vim.o.pumborder = "rounded"
 
 -- disable autocompletion in Telescope buffer
 vim.api.nvim_create_autocmd("FileType", {

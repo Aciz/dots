@@ -7,7 +7,7 @@ vim.lsp.inlay_hint.enable(true)
 vim.diagnostic.config({
 	severity_sort = true,
 	float = { border = "rounded", source = "if_many" },
-	underline = { severity = vim.diagnostic.severity.ERROR },
+	underline = { severity = vim.diagnostic.severity.WARN },
 	signs = vim.g.have_nerd_font and {
 		text = {
 			[vim.diagnostic.severity.ERROR] = "󰅚 ",
@@ -16,22 +16,22 @@ vim.diagnostic.config({
 			[vim.diagnostic.severity.HINT] = "󰌶 ",
 		},
 	} or {},
-	virtual_text = {
-		source = "if_many",
-		spacing = 2,
-		format = function(diagnostic)
-			local diagnostic_message = {
-				[vim.diagnostic.severity.ERROR] = diagnostic.message,
-				[vim.diagnostic.severity.WARN] = diagnostic.message,
-				[vim.diagnostic.severity.INFO] = diagnostic.message,
-				[vim.diagnostic.severity.HINT] = diagnostic.message,
-			}
-			return diagnostic_message[diagnostic.severity]
-		end,
-	},
+	-- virtual_text = {
+	-- 	source = "if_many",
+	-- 	spacing = 2,
+	-- 	format = function(diagnostic)
+	-- 		local diagnostic_message = {
+	-- 			[vim.diagnostic.severity.ERROR] = diagnostic.message,
+	-- 			[vim.diagnostic.severity.WARN] = diagnostic.message,
+	-- 			[vim.diagnostic.severity.INFO] = diagnostic.message,
+	-- 			[vim.diagnostic.severity.HINT] = diagnostic.message,
+	-- 		}
+	-- 		return diagnostic_message[diagnostic.severity]
+	-- 	end,
+	-- },
 })
 
--- autocompletions, straight from nvim docs
+-- lsp keymaps and diagnostics (completion lives in 'blink-cmp-config.lua')
 vim.api.nvim_create_autocmd("LspAttach", {
 	group = vim.api.nvim_create_augroup("my.lsp", {}),
 	callback = function(ev)
@@ -45,14 +45,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		-- Create a keymap for vim.lsp.buf.implementation ...
 		-- end
 
-		-- Enable auto-completion. Note: Use CTRL-Y to select an item. |complete_CTRL-Y|
-		if client:supports_method("textDocument/completion") then
-			-- Optional: trigger autocompletion on EVERY keypress. May be slow!
-			-- local chars = {}; for i = 32, 126 do table.insert(chars, string.char(i)) end
-			-- client.server_capabilities.completionProvider.triggerCharacters = chars
-
-			vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
-		end
+		-- completion is provided by blink.cmp, see 'blink-cmp-config.lua'
 
 		-- Auto-format ("lint") on save.
 		-- Usually not needed if server supports "textDocument/willSaveWaitUntil".
@@ -220,6 +213,22 @@ local servers = {
 	------------------------------------------------------------------------------
 	pyright = {},
 	ruff = {},
+
+	------------------------------------------------------------------------------
+	-- rust
+	------------------------------------------------------------------------------
+	-- NOTE: the rust-analyzer client is owned by rustaceanvim, see
+	-- 'rustaceanvim-config.lua'. Configuring it here as well would register a
+	-- second client and conflict with rustaceanvim's setup.
+	-- rust_analyzer = {
+	-- 	settings = {
+	-- 		["rust-analyzer"] = {
+	-- 			check = {
+	-- 				command = "clippy",
+	-- 			},
+	-- 		},
+	-- 	},
+	-- },
 }
 
 local ensure_installed = vim.tbl_keys(servers)

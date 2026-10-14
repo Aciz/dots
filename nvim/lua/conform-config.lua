@@ -1,13 +1,9 @@
-local conform = require("conform");
+local conform = require("conform")
 conform.setup({
 	-- keymaps
-	vim.keymap.set(
-		'n',
-		'<leader>f',
-		function()
-			conform.format({ async = true, lsp_format = "fallback" })
-		end,
-		{ desc = "[F]ormat buffer" }),
+	vim.keymap.set("n", "<leader>f", function()
+		conform.format({ async = true, lsp_format = "fallback" })
+	end, { desc = "[F]ormat buffer" }),
 
 	notify_on_error = true,
 	formatters_by_ft = {
@@ -29,11 +25,12 @@ conform.setup({
 
 		cmake = { "cmakelang" },
 
+		rust = { "rustfmt" },
+
 		-- Conform can also run multiple formatters sequentially
 		-- python = { "isort", "black" },
 		--
 		-- You can use 'stop_after_first' to run the first available formatter from the list
 		-- javascript = { "prettierd", "prettier", stop_after_first = true },
 	},
-
 })
